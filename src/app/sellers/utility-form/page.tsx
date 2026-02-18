@@ -160,6 +160,12 @@ export default function UtilityFormPage() {
         console.warn("Could not save to backend");
       }
 
+      // Clear the form
+      setAddress("");
+      setUtilities(UTILITY_TYPES.map((type) => ({ type, company: "", phone: "", cost: "" })));
+      setNotes("");
+      setSellerName("");
+      setSellerEmail("");
       setStatus("success");
     } catch (err) {
       setStatus("error");
