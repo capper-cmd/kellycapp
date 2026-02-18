@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { jsPDF } from "jspdf";
 
 const UTILITY_TYPES = [
   "Electric",
@@ -46,33 +47,104 @@ export default function UtilityFormPage() {
     setStatus("loading");
     setErrorMsg("");
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://kellycapprealestate.mlbcity.com";
-
     try {
-      const res = await fetch(`${apiUrl}/api/utility-form/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          address,
-          utilities,
-          notes,
-          sellerName,
-          sellerEmail,
-        }),
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      let y = 20;
+
+      // Header
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("Seller Utility Information", pageWidth / 2, y, { align: "center" });
+      y += 10;
+
+      // Kelly Capp branding
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(120, 120, 120);
+      doc.text("Prepared by Kelly Capp — Luke Team Real Estate — (612) 232-4499", pageWidth / 2, y, { align: "center" });
+      doc.setTextColor(0, 0, 0);
+      y += 12;
+
+      // Property address
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("Property Address:", 14, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(address, 60, y);
+      y += 8;
+
+      // Seller info
+      doc.setFont("helvetica", "bold");
+      doc.text("Seller:", 14, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${sellerName}  •  ${sellerEmail}`, 60, y);
+      y += 12;
+
+      // Table header
+      doc.setFillColor(212, 128, 46); // brand orange
+      doc.rect(14, y - 5, pageWidth - 28, 8, "F");
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(255, 255, 255);
+      doc.text("Utility", 16, y);
+      doc.text("Company", 58, y);
+      doc.text("Phone", 115, y);
+      doc.text("Avg Monthly", 160, y);
+      doc.setTextColor(0, 0, 0);
+      y += 8;
+
+      // Table rows
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      let totalCost = 0;
+      utilities.forEach((row, i) => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+        if (i % 2 === 0) {
+          doc.setFillColor(245, 240, 235);
+          doc.rect(14, y - 5, pageWidth - 28, 8, "F");
+        }
+        doc.setFont("helvetica", "bold");
+        doc.text(row.type, 16, y);
+        doc.setFont("helvetica", "normal");
+        doc.text(row.company || "—", 58, y);
+        doc.text(row.phone || "—", 115, y);
+        const costStr = row.cost ? `$${row.cost.replace(/^\$/, "")}` : "—";
+        doc.text(costStr, 160, y);
+        const parsed = parseFloat(row.cost.replace(/[^0-9.]/g, ""));
+        if (!isNaN(parsed)) totalCost += parsed;
+        y += 8;
       });
 
-      if (!res.ok) throw new Error("Failed to generate PDF");
+      // Total
+      y += 4;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(`Estimated Monthly Total: $${totalCost.toFixed(2)}`, 14, y);
+      y += 10;
 
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "utility-information.pdf";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
+      // Notes
+      if (notes.trim()) {
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("Additional Notes:", 14, y);
+        y += 6;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        const lines = doc.splitTextToSize(notes, pageWidth - 28);
+        doc.text(lines, 14, y);
+        y += lines.length * 5 + 6;
+      }
 
+      // Footer
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Generated ${new Date().toLocaleDateString()} — kellycapp.com`, pageWidth / 2, 285, { align: "center" });
+
+      doc.save("utility-information.pdf");
       setStatus("success");
     } catch (err) {
       setStatus("error");
