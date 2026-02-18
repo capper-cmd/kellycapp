@@ -2,12 +2,19 @@
 
 import { useState, FormEvent } from "react";
 
+const INTERESTS = [
+  "Buying a Home",
+  "Selling My Home",
+  "Both Buying & Selling",
+  "Just Have Questions",
+];
+
 export default function Contact() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [interest, setInterest] = useState("Buying a Home");
+  const [interest, setInterest] = useState(INTERESTS[0]);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -22,9 +29,15 @@ export default function Contact() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstName, lastName, email, phone, interest, message }),
       });
-      if (!res.ok) throw new Error("Failed to submit");
+
+      if (!res.ok) throw new Error("Submit failed");
       setStatus("success");
-      setFirstName(""); setLastName(""); setEmail(""); setPhone(""); setMessage("");
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPhone("");
+      setInterest(INTERESTS[0]);
+      setMessage("");
     } catch {
       setStatus("error");
     }
@@ -59,7 +72,10 @@ export default function Contact() {
                     <span className="text-xl">📞</span>
                     <div>
                       <p className="font-medium text-brand-800">Phone</p>
-                      <a href="tel:6122324499" className="text-gray-600 hover:text-brand-600 transition-colors">
+                      <a
+                        href="tel:6122324499"
+                        className="text-gray-600 hover:text-brand-600 transition-colors"
+                      >
                         (612) 232-4499
                       </a>
                     </div>
@@ -68,14 +84,23 @@ export default function Contact() {
                     <span className="text-xl">📍</span>
                     <div>
                       <p className="font-medium text-brand-800">Office</p>
-                      <p className="text-gray-600">16211 Turnberry Turn NW<br />Ramsey, MN 55303</p>
+                      <p className="text-gray-600">
+                        16211 Turnberry Turn NW
+                        <br />
+                        Ramsey, MN 55303
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="text-xl">🏢</span>
                     <div>
                       <p className="font-medium text-brand-800">Brokerage</p>
-                      <a href="http://www.luketeamrealestate.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-brand-600 transition-colors">
+                      <a
+                        href="http://www.luketeamrealestate.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-600 hover:text-brand-600 transition-colors"
+                      >
                         Luke Team Real Estate
                       </a>
                     </div>
@@ -88,11 +113,16 @@ export default function Contact() {
                   Areas I Serve
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {["Maple Grove", "Minneapolis", "Plymouth", "Osseo", "Edina", "Ramsey"].map((area) => (
-                    <span key={area} className="px-3 py-1.5 bg-sand-50 border border-sand-200 rounded-full text-xs font-medium text-sand-700">
-                      {area}
-                    </span>
-                  ))}
+                  {["Maple Grove", "Minneapolis", "Plymouth", "Osseo", "Edina", "Ramsey"].map(
+                    (area) => (
+                      <span
+                        key={area}
+                        className="px-3 py-1.5 bg-sand-50 border border-sand-200 rounded-full text-xs font-medium text-sand-700"
+                      >
+                        {area}
+                      </span>
+                    )
+                  )}
                 </div>
               </div>
             </div>
@@ -105,10 +135,17 @@ export default function Contact() {
 
               {status === "success" ? (
                 <div className="text-center py-12">
-                  <div className="text-5xl mb-4">✉️</div>
-                  <h4 className="text-xl font-serif font-bold text-brand-800 mb-2">Message Sent!</h4>
-                  <p className="text-gray-600">Thanks for reaching out! Kelly will get back to you soon.</p>
-                  <button onClick={() => setStatus("idle")} className="mt-6 text-brand-600 hover:text-brand-700 font-medium underline">
+                  <div className="text-5xl mb-4">🎉</div>
+                  <h4 className="text-xl font-serif font-bold text-brand-800 mb-2">
+                    Message Sent!
+                  </h4>
+                  <p className="text-gray-600 mb-6">
+                    Thanks for reaching out! Kelly will get back to you soon.
+                  </p>
+                  <button
+                    onClick={() => setStatus("idle")}
+                    className="text-brand-600 hover:text-brand-700 font-medium underline"
+                  >
                     Send another message
                   </button>
                 </div>
@@ -116,41 +153,97 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                      <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputClass} placeholder="Jane" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className={inputClass}
+                        placeholder="Jane"
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                      <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputClass} placeholder="Smith" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        className={inputClass}
+                        placeholder="Smith"
+                      />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} placeholder="jane@example.com" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={inputClass}
+                      placeholder="jane@example.com"
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                    <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} placeholder="(555) 123-4567" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className={inputClass}
+                      placeholder="(555) 123-4567"
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">I&apos;m interested in...</label>
-                    <select value={interest} onChange={(e) => setInterest(e.target.value)} className={`${inputClass} bg-white`}>
-                      <option>Buying a Home</option>
-                      <option>Selling My Home</option>
-                      <option>Both Buying &amp; Selling</option>
-                      <option>Just Have Questions</option>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      I&apos;m interested in...
+                    </label>
+                    <select
+                      value={interest}
+                      onChange={(e) => setInterest(e.target.value)}
+                      className={`${inputClass} bg-white`}
+                    >
+                      {INTERESTS.map((opt) => (
+                        <option key={opt}>{opt}</option>
+                      ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                    <textarea rows={4} value={message} onChange={(e) => setMessage(e.target.value)} className={`${inputClass} resize-none`} placeholder="Tell me about what you're looking for..." />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Message
+                    </label>
+                    <textarea
+                      rows={4}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      className={`${inputClass} resize-none`}
+                      placeholder="Tell me about what you're looking for..."
+                    />
                   </div>
-                  <button type="submit" disabled={status === "loading"} className="w-full py-3 bg-brand-600 text-white font-semibold rounded-lg hover:bg-brand-700 transition-colors shadow-md shadow-brand-600/20 disabled:opacity-60 disabled:cursor-not-allowed">
+
+                  {status === "error" && (
+                    <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-center text-red-700 text-sm">
+                      Something went wrong. Please try again or call Kelly directly.
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="w-full py-3 bg-brand-600 text-white font-semibold rounded-lg hover:bg-brand-700 transition-colors shadow-md shadow-brand-600/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
                     {status === "loading" ? "Sending..." : "Send Message"}
                   </button>
-                  {status === "error" && (
-                    <p className="text-red-600 text-sm text-center">Something went wrong. Please try again or call Kelly directly.</p>
-                  )}
                 </form>
               )}
             </div>
