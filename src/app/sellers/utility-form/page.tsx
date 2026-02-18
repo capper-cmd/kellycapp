@@ -365,7 +365,7 @@ export default function UtilityFormPage() {
             {/* Status Messages */}
             {status === "success" && (
               <div className="rounded-lg bg-green-50 border border-green-200 p-4 text-center text-green-800 text-sm font-medium">
-                ✅ Your Utility Information PDF has been generated and downloaded!
+                ✅ Thank you for filling out the form, it has been sent to Kelly!
               </div>
             )}
             {status === "error" && (
