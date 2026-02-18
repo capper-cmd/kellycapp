@@ -143,6 +143,42 @@ export default function Sellers() {
         </div>
       </section>
 
+      {/* Seller Tools */}
+      <section className="py-20 bg-warm-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-serif font-bold text-brand-900 mb-4">
+            Seller Tools
+          </h2>
+          <p className="text-gray-600 mb-10 max-w-2xl mx-auto">
+            Helpful resources to make your selling experience as smooth as possible.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <Link
+              href="/sellers/utility-form"
+              className="bg-white rounded-xl p-6 border border-warm-200 shadow-sm hover:shadow-md hover:border-brand-300 transition-all text-left group"
+            >
+              <div className="text-3xl mb-3">⚡</div>
+              <h3 className="font-serif font-bold text-brand-800 group-hover:text-brand-600 transition-colors">
+                Utility Information Form
+              </h3>
+              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                Fill out your home&apos;s utility details and download a professional PDF to share with buyers.
+              </p>
+              <span className="inline-block mt-3 text-sm font-semibold text-brand-600">
+                Fill out form →
+              </span>
+            </Link>
+            <div className="bg-white rounded-xl p-6 border border-warm-200 shadow-sm opacity-60">
+              <div className="text-3xl mb-3">📋</div>
+              <h3 className="font-serif font-bold text-brand-800">More Tools Coming</h3>
+              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                Additional seller resources and forms will be available soon.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-16 bg-brand-700 text-white text-center">
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-2xl font-serif font-bold">
