@@ -145,6 +145,21 @@ export default function UtilityFormPage() {
       doc.text(`Generated ${new Date().toLocaleDateString()} — kellycapp.com`, pageWidth / 2, 285, { align: "center" });
 
       doc.save("utility-information.pdf");
+
+      // Also submit to backend to save in Kelly's documents + email
+      try {
+        const pdfBase64 = doc.output("datauristring").split(",")[1];
+        const apiUrl = "https://kellycapprealestate.mlbcity.com";
+        await fetch(`${apiUrl}/api/utility-form/submit`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pdfBase64, address, sellerName, sellerEmail }),
+        });
+      } catch {
+        // Silent fail — PDF already downloaded, backend save is bonus
+        console.warn("Could not save to backend");
+      }
+
       setStatus("success");
     } catch (err) {
       setStatus("error");
